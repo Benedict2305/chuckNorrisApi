@@ -1,0 +1,49 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(pink);
+}
+
+.m, .ol{
+    margin: 5% 10%;   
+}
+
+.m span{
+    font-size: 1.3rem;
+}
+
+.m button{
+    padding: auto;
+    outline: none;
+    border: none;
+    background-color: burlywood;
+    padding: 0.5rem 1rem;
+    cursor:auto;
+}
+
+.ol{
+    display: flex;
+    flex-direction: column;
+}
+
+.ol .orderList li{
+    background-color: rgb(14, 15, 15);
+    padding: 0.3rem;
+    color: white;
+    text-shadow: 3px 4px solid black;
+}
+
+.ol .orderList li span{
+    margin-left: 1rem;
+    
+}
+.ol .orderList li .delBtn{
+    background-color: red;
+    padding: 0.2rem 0.25rem;
+    
+}
+
