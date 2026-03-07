@@ -1,101 +1,136 @@
-const btn = document.querySelector('.btn');
-btn.addEventListener('click', getJokes)
+const btn = document.querySelector('#generate-btn');
+const ol = document.querySelector('#joke-list');
+const countSpan = document.querySelector('#joke-count');
 
-localGet()
+btn.addEventListener('click', getJokes);
+ol.addEventListener('click', delItem);
 
-function getJokes (){
-const myJokes = new XMLHttpRequest()
+// Initialize view
+localGet();
+updateCount();
+renderEmptyState();
 
-myJokes.open('GET', 'https://api.chucknorris.io/jokes/random', true);
+function getJokes() {
+    // Optional: add loading state to button
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = `<span>Loading...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
+    btn.disabled = true;
 
-myJokes.onload = function(){
+    const myJokes = new XMLHttpRequest();
+    myJokes.open('GET', 'https://api.chucknorris.io/jokes/random', true);
 
-    if (this.status === 200) {   
-        let text = JSON.parse(this.responseText)
+    myJokes.onload = function() {
+        if (this.status === 200) {   
+            let text = JSON.parse(this.responseText);
+            let textJoke = text.value;
 
-        let textJoke = text.value
-
-        // console.log(text)
-        const ol = document.querySelector('.orderList');
-        const li = document.createElement('li');
-        const spanBtn = document.createElement('input')
-        spanBtn.style.backgroundColor = 'red';
-        // spanBtn.style.padding = '0.2rem 0.25rem';
-        spanBtn.value = 'Delete';
-        spanBtn.classList = 'delbtn'
-        li.textContent = textJoke;
-        li.appendChild(spanBtn)
-        ol.appendChild(li)
-
-        local(textJoke)
+            createJokeElement(textJoke);
+            localSave(textJoke);
+            updateCount();
+            renderEmptyState();
+        }
+        
+        // Restore button state
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
     }
-}
-myJokes.send()
-}
-
-
-function local(incoming) {
-    let enterHouse;
-    if (localStorage.getItem('houseOfChunksJokes') === null) {
-        enterHouse = []
-    } else {
-        enterHouse = JSON.parse(localStorage.getItem('houseOfChunksJokes'))
+    
+    myJokes.onerror = function() {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+        alert("Failed to fetch joke. Please try again.");
     }
+    
+    myJokes.send();
+}
 
-    enterHouse.push(incoming)
+function createJokeElement(jokeText) {
+    const li = document.createElement('li');
+    li.className = 'joke-card';
 
-    localStorage.setItem('houseOfChunksJokes', JSON.stringify(enterHouse))
+    const p = document.createElement('p');
+    p.className = 'joke-text';
+    p.textContent = jokeText;
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'delbtn';
+    delBtn.title = 'Delete Joke';
+    delBtn.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+    li.appendChild(p);
+    li.appendChild(delBtn);
+    ol.appendChild(li);
+}
+
+function localSave(incoming) {
+    let enterHouse = getLocalData();
+    enterHouse.push(incoming);
+    localStorage.setItem('houseOfChunksJokes', JSON.stringify(enterHouse));
+    updateCount();
 }
 
 function localGet() {
-    let enterHouse;
-    if (localStorage.getItem('houseOfChunksJokes') === null) {
-        enterHouse = []
-    } else {
-        enterHouse = JSON.parse(localStorage.getItem('houseOfChunksJokes'))
-    }
-    enterHouse.forEach(enter1 => {
-        const ol = document.querySelector('.orderList');
-        const li = document.createElement('li');
-        const spanBtn = document.createElement('input')
-        
-        spanBtn.style.backgroundColor = 'red';
-        // spanBtn.style.padding = '0.2rem 0.25rem';
-        spanBtn.value = 'Delete';
-        spanBtn.classList = 'delbtn'
-        li.textContent = enter1;
-        li.appendChild(spanBtn)
-        ol.appendChild(li)
+    let enterHouse = getLocalData();
+    ol.innerHTML = ''; // Clear current contents
+    enterHouse.forEach(joke => {
+        createJokeElement(joke);
     });
 }
 
-const ol = document.querySelector('.orderList')
-ol.addEventListener('click', delItem);
-
-function delItem(e) {
-    if (e.target.classList.contains('delbtn')) {
-        e.target.parentElement.remove();
-
-        localClear(e.target.parentElement);
+function getLocalData() {
+    if (localStorage.getItem('houseOfChunksJokes') === null) {
+        return [];
+    } else {
+        return JSON.parse(localStorage.getItem('houseOfChunksJokes'));
     }
-    e.preventDefault()
 }
 
-//          delete an item from local storage
-function localClear(targets) {
-    let enterHouse;
-    if (localStorage.getItem('houseOfChunksJokes') === null) {
-        enterHouse = []
-    } else {
-        enterHouse = JSON.parse(localStorage.getItem('houseOfChunksJokes'))
+function delItem(e) {
+    let targetBtn = e.target.closest('.delbtn');
+    if (targetBtn) {
+        let li = targetBtn.parentElement;
+        let jokeText = li.querySelector('.joke-text').textContent;
+        
+        // Remove from DOM with animation fallback
+        li.style.opacity = '0';
+        li.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+            li.remove();
+            localClear(jokeText);
+            updateCount();
+            renderEmptyState();
+        }, 300); // Wait for transition
     }
-    // console.log(enterHouse)
-    console.log(targets.textContent)
+}
+
+function localClear(jokeTextToRemove) {
+    let enterHouse = getLocalData();
     
-    enterHouse.forEach((remove1, index) =>{
-        if (targets.textContent === remove1) {
-            enterHouse.splice(index, 1)
+    // Find precise index to remove only one instance
+    const index = enterHouse.findIndex(joke => joke === jokeTextToRemove);
+    if (index > -1) {
+        enterHouse.splice(index, 1);
+        localStorage.setItem('houseOfChunksJokes', JSON.stringify(enterHouse));
+    }
+}
+
+function updateCount() {
+    let enterHouse = getLocalData();
+    countSpan.textContent = enterHouse.length;
+}
+
+function renderEmptyState() {
+    let enterHouse = getLocalData();
+    // Only add empty state if there are no jokes and no empty state exists
+    const existingEmptyState = document.querySelector('.empty-state');
+    
+    if (enterHouse.length === 0) {
+        if (!existingEmptyState) {
+            ol.innerHTML = `<li class="empty-state">No jokes saved yet. Generate one above!</li>`;
         }
-        localStorage.setItem('houseOfChunksJokes', JSON.stringify(enterHouse))
-    })
+    } else {
+        if (existingEmptyState) {
+            existingEmptyState.remove();
+        }
+    }
 }

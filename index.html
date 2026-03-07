@@ -4,28 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="./index.css
-    ">
+    <meta name="description"
+        content="Get your daily dose of Chuck Norris jokes. An aesthetically pleasing and premium joke generator.">
+    <meta name="keywords" content="Chuck Norris, Jokes, Generator, API, Funny, Humor">
+    <meta name="author" content="Premium Joke Generator">
+    <meta name="robots" content="index, follow">
+    <title>Chuck Norris Joke Generator | Premium Experience</title>
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="./index.css">
 </head>
 
 <body>
-    <section>
-        <h1>Are you having a boring 😔🥱 day?</h1>
-        <h2>Why don't i crack you up🤭😊!! with my JOKES.</h2>
-        <div class=""><button class="btn">Get my jokes</button></div>
-    </section>
-
-    <!-- <div class="m">
-        <span>Are you having a boring 😔🥱 day? Why don't i crack you up🤭😊!! with my JOKES. Click me to get my
-            jokes... </span><button class="btn">Get my jokes</button>
-    </div> -->
-    <div class="ol">
-        <ol class="orderList">
-            <!-- <li>im funny <input type="button" value="Delete" class="delBtn"></li> -->
-        </ol>
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
     </div>
+
+    <main class="app-container">
+        <div class="left-panel">
+            <header class="app-header">
+                <div class="icon-wrapper">
+                    <i class="fa-solid fa-face-laugh-squint"></i>
+                </div>
+                <h1>Boring 😔🥱 day?</h1>
+                <h2>Let's crack you up 🤭😊 with some Chuck Norris facts!</h2>
+            </header>
+
+            <section class="generator-section">
+                <button class="btn main-action-btn" id="generate-btn">
+                    <span>Get a Joke</span>
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </button>
+            </section>
+        </div>
+
+        <section class="saved-jokes-section">
+            <div class="section-header">
+                <h3><i class="fa-solid fa-bookmark"></i> Saved Jokes</h3>
+                <span class="joke-count" id="joke-count">0</span>
+            </div>
+
+            <ul class="orderList" id="joke-list">
+                <!-- Jokes will be dynamically injected here -->
+            </ul>
+        </section>
+    </main>
 
     <script src="./index.js"></script>
 </body>

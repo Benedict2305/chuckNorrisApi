@@ -1,104 +1,388 @@
-*{
+:root {
+    --bg-color: #0d0f12;
+    --surface-color: rgba(26, 30, 36, 0.7);
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --danger-color: #ef4444;
+    --danger-hover: #dc2626;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --font-family: 'Outfit', sans-serif;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 8px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
-    background: black;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-family);
     height: 100vh;
-}
-
-section div{
-    width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
-
+    align-items: center;
+    /* Center vertically for better single-page look */
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
 }
 
-section h1{
-    font-size: 3rem;
-}
-section h2{
-    font-size: 2rem;
+/* Background Glowing Effects */
+.background-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
 }
 
-section div button{
-    /* padding: 1rem 4rem; */
-    width: 90%;
-    padding: .6rem 0;
-    border-radius: 3rem;
-    font-weight: 700;
-    letter-spacing: .1rem;
-    transition: .5s;
-    &:hover{
-        background-color: darkgray;
+.glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+    animation: float 10s infinite ease-in-out alternate;
+}
+
+.glow-1 {
+    top: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.5) 0%, rgba(0, 0, 0, 0) 70%);
+}
+
+.glow-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    100% {
+        transform: translate(30px, 50px) scale(1.1);
     }
 }
 
-@media (max-width:320px){
-   section h1{
-    font-size: 1.5rem;
-}
-section h2{
-    font-size: 1.7rem;
-    margin-top: 0.5rem;
-} 
-}
-
-@media (min-width:768px){
-   section h1{
-    font-size: 2.3rem;
-}
-section h2{
-    font-size: 1.7rem;
-    margin-top: 0.5rem;
-} 
+/* Main Container */
+.app-container {
+    width: 100%;
+    max-width: 1100px;
+    height: 100%;
+    max-height: 90vh;
+    /* Restrict max height so it doesn't touch edges */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    z-index: 1;
 }
 
-.m, .ol{
-    margin: 5% 10%;   
-}
-
-.m span{
-    font-size: 1.3rem;
-}
-
-.m button{
-    padding: auto;
-    outline: none;
-    border: none;
-    background-color: burlywood;
-    padding: 0.5rem 1rem;
-    cursor:pointer;
-}
-
-.ol{
+.left-panel {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    gap: 2.5rem;
+    height: 100%;
 }
 
-.ol .orderList li{
-    background-color: rgb(14, 15, 15);
-    padding: 0.3rem;
+/* Header */
+.app-header {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--surface-color);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-wrapper {
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.app-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.app-header h2 {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Button */
+.generator-section {
+    display: flex;
+    justify-content: center;
+}
+
+.main-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: linear-gradient(135deg, var(--primary-color), #818cf8);
     color: white;
-    text-shadow: 3px 4px solid black;
+    border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    font-family: var(--font-family);
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+    transition: var(--transition);
 }
 
-.ol .orderList li span{
-    margin-left: 1rem;
-    
-}
-.ol .orderList li .delBtn{
-    background-color: red;
-    padding: 0.2rem 0.25rem;
-    
+.main-action-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.6);
 }
 
+.main-action-btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.main-action-btn i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.main-action-btn:hover i {
+    transform: rotate(15deg) scale(1.1);
+}
+
+/* Saved Jokes Section */
+.saved-jokes-section {
+    background: var(--surface-color);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    /* Reduced padding slightly to save space */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Reduced gap */
+    height: 100%;
+    overflow: hidden;
+    /* Prevent section from growing beyond app-container */
+    min-height: 0;
+    /* Crucial for internal flex scrolling */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.section-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-main);
+}
+
+.section-header h3 i {
+    color: var(--primary-color);
+}
+
+.joke-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+ul.orderList {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    /* Enable internal scrolling */
+    flex: 1;
+    /* Take up remaining space inside the card */
+    padding-right: 0.5rem;
+    /* Space for the scrollbar */
+}
+
+/* Custom Scrollbar */
+ul.orderList::-webkit-scrollbar {
+    width: 6px;
+}
+
+ul.orderList::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+ul.orderList::-webkit-scrollbar-thumb {
+    background: var(--surface-border);
+    border-radius: 4px;
+}
+
+ul.orderList::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.joke-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    transition: var(--transition);
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.joke-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+
+.joke-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    flex: 1;
+}
+
+.delbtn {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.delbtn:hover {
+    background: var(--danger-color);
+    color: white;
+    transform: rotate(15deg);
+}
+
+.delbtn i {
+    pointer-events: none;
+    /* ensures click target is always the button */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    body {
+        height: auto;
+        overflow-y: auto;
+        align-items: flex-start;
+    }
+
+    .app-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        max-height: none;
+        gap: 2rem;
+    }
+
+    .left-panel {
+        justify-content: flex-start;
+        height: auto;
+    }
+
+    .saved-jokes-section {
+        height: 60vh;
+    }
+}
+
+@media (max-width: 600px) {
+    .app-header {
+        padding: 2rem 1.5rem;
+    }
+
+    .app-header h1 {
+        font-size: 2rem;
+    }
+
+    .saved-jokes-section {
+        padding: 1.5rem;
+    }
+
+    .joke-card {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .delbtn {
+        align-self: flex-end;
+    }
+}
